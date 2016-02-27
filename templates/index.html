@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% load static from staticfiles %}
+
+{% block content %}
+    <h4 style="display: inline-block; padding: 5px 0;"><a href="{% url 'new-questions' %}">New Questions</a></h4>
+    <h4 style="display: inline-block; padding: 5px 0;"><a href="{% url 'popular-questions' %}">Popular Questions</a>
+    </h4>
+
+    {% if filter_tag_value %}
+        <h4 style="display: inline-block; padding: 5px 0;">Tag: {{ filter_tag_value }}</h4>
+    {% endif %}
+
+    {% for question in questions %}
+        <div class="container question" style="margin: 0 0 10px 0; min-width: 120px; min-height: 120px;">
+            <div style="width: 96px; float: left;">
+                {% if question.author.avatar %}
+                    <img class="bigAvatar" src="{{ question.author.avatar.url }}" alt="avatar">
+                {% else %}
+                    <img class="bigAvatar" src="{% static 'default_avatar.png' %}" alt="avatar">
+                {% endif %}
+
+                <div style="margin: 5px;">
+{#                    Класс question-rating устанавливается для доступа к объектам этого класса через js#}
+{#                    Потом оттуда выковыривается идентификатор вопроса из data-question-id#}
+                    <p class="question-rating" data-question-id="{{ question.id }}" style="text-align: center; margin: 0 0 2px 0;">{{ question.rating }}</p>
+
+{#                    {% if user.is_authenticated %}#}
+{#                        У кнопок установлены классы like_question и dislike_question для доступа к объектам этого класса через js#}
+                        <button data-question-id="{{ question.id }}" type="button" class="like_question btn btn-xs btn-success" style="">
+                            <span class="glyphicon glyphicon-thumbs-up"></span>
+                        </button>
+                        <button data-question-id="{{ question.id }}" type="button" class="dislike_question btn btn-xs btn-danger" style="float: right">
+                            <span class="glyphicon glyphicon-thumbs-down"></span>
+                        </button>
+{#                    {% endif %}#}
+                </div>
+            </div>
+            <div style="width: auto; overflow: hidden; padding: 0 10px;">
+                <h4><a href="{% url 'answers' question.id %}">{{ question.title }}</a></h4>
+
+                <p>{{ question.text }}</p>
+
+                <div style="padding: 10px 0;">
+                    <a href="{% url 'answers' question.id %}">answers({{ question.answers_count }})</a>
+                    <span style="margin: 0 0 0 10px;">Tags:</span>
+                    {% for tag in question.tags.all %}
+                        <a href="{% url 'tagged-questions' tag.value %}"><span
+                                class="label label-default">{{ tag.value }}</span></a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
+{#        <ul class="pagination">#}
+{#            <li><a href="#">1</a></li>#}
+{#            <li><a href="#">2</a></li>#}
+{#            <li><a href="#">3</a></li>#}
+{#            <li><a href="#">...</a></li>#}
+{#            <li><a href="#">53</a></li>#}
+{#        </ul>#}
+    {% if questions %}
+        <div class="pagination">
+        <span class="step-links">
+            {% if questions.has_previous %}
+                <a href="?page={{ questions.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ questions.number }} of {{ questions.paginator.num_pages }}
+            </span>
+
+            {% if questions.has_next %}
+                <a href="?page={{ questions.next_page_number }}">next</a>
+            {% endif %}
+        </span>
+        </div>
+    {% endif %}
+{% endblock %}

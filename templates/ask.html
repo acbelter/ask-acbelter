@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+
+{% block content %}
+    <h2>New Question</h2>
+
+    <div class="alert alert-danger" role="alert" style="display: none">This question is stupid!</div>
+
+    <form class="form-horizontal" action="" method="post">
+        {% csrf_token %}
+
+        {% for error in form.title.errors %}
+            <div class="alert alert-danger" role="alert">{{ error }}</div>
+        {% endfor %}
+
+        <div class="form-group">
+            <label for="inputTitle" class="col-sm-2 control-label" style="text-align: left;">Title</label>
+
+            <div class="col-sm-10">
+{#                <input type="text" class="form-control" id="inputTitle" placeholder="Title">#}
+                {{ form.title|add_class:"form-control"|attr:"name:title"|attr:"type:text"|attr:"id:inputTitle"|attr:"placeholder:Title" }}
+            </div>
+        </div>
+
+        {% for error in form.text.errors %}
+            <div class="alert alert-danger" role="alert">{{ error }}</div>
+        {% endfor %}
+
+
+        <div class="form-group">
+            <label for="inputText" class="col-sm-2 control-label" style="text-align: left;">Text</label>
+
+            <div class="col-sm-10">
+{#                            <textarea rows="10" class="form-control" id="inputText" placeholder="Text"#}
+{#                                      style="resize: none;">Really, how? I have no idea about it.</textarea>#}
+                {{ form.text|add_class:"form-control"|attr:"name:text"|attr:"rows:10"|attr:"style:resize: none;"|attr:"id:inputText"|attr:"placeholder:Text"}}
+            </div>
+        </div>
+
+        {% for error in form.tags.errors %}
+            <div class="alert alert-danger" role="alert">{{ error }}</div>
+        {% endfor %}
+
+        <div class="form-group">
+            <label for="inputTags" class="col-sm-2 control-label" style="text-align: left;">Tags</label>
+
+            <div class="col-sm-10">
+{#                <input type="text" class="form-control" id="inputTags" placeholder="Tags" value="moon, park, puzzle">#}
+                 {{ form.tags|add_class:"form-control"|attr:"name:tags"|attr:"type:text"|attr:"id:inputTags"|attr:"placeholder:first_tag, second_tag" }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-success">ASK!</button>
+            </div>
+        </div>
+    </form>
+{% endblock %}

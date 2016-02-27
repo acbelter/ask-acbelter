@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% load static from staticfiles %}
+{% load widget_tweaks %}
+
+{% block content %}
+    <div class="container" style="margin: 0 0 10px 0; padding: 10px; min-width: 120px; min-height: 120px;">
+        <div style="width: 96px; float: left;">
+            {% if question.author.avatar %}
+                <img class="bigAvatar" src="{{ question.author.avatar.url }}" alt="avatar">
+            {% else %}
+                <img class="bigAvatar" src="{% static 'default_avatar.png' %}" alt="avatar">
+            {% endif %}
+
+            <div style="margin: 5px;">
+{#                    Класс question-rating устанавливается для доступа к объектам этого класса через js#}
+{#                    Потом оттуда выковыривается идентификатор вопроса из data-question-id#}
+                <p class="question-rating" data-question-id="{{ question.id }}"  style="text-align: center; margin: 0 0 2px 0;">{{ question.rating }}</p>
+
+{#                {% if user.is_authenticated %}#}
+{#                        У кнопок установлены классы like_question и dislike_question для доступа к объектам этого класса через js#}
+                    <button data-question-id="{{ question.id }}" type="button" class="like_question btn btn-xs btn-success" style="">
+                        <span class="glyphicon glyphicon-thumbs-up"></span>
+                    </button>
+                    <button data-question-id="{{ question.id }}" type="button" class="dislike_question btn btn-xs btn-danger" style="float: right">
+                        <span class="glyphicon glyphicon-thumbs-down"></span>
+                    </button>
+{#                {% endif %}#}
+            </div>
+        </div>
+        <div style="width: auto; overflow: hidden; padding: 0 10px;">
+            <h4>{{ question.title }}</h4>
+
+            <p>{{ question.text }}</p>
+
+            <div style="padding: 10px 0;">
+                <span>Tags:</span>
+                {% for tag in question.tags.all %}
+                    <a href="{% url 'tagged-questions' tag.value %}"><span
+                            class="label label-default">{{ tag.value }}</span></a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="sectionDivider" style="margin: 10px 0;"></div>
+
+    {% for answer in answers %}
+        <div id="{{ answer.id }}" class="container answer" style="margin: 0 0 10px 0; min-width: 120px; min-height: 120px;">
+            <div style="width: 96px; float: left;">
+                {% if answer.author.avatar %}
+                    <img class="bigAvatar" src="{{ answer.author.avatar.url }}" alt="avatar">
+                {% else %}
+                    <img class="bigAvatar" src="{% static 'default_avatar.png' %}" alt="avatar">
+                {% endif %}
+
+                <div style="margin: 5px;">
+{#                    Класс answer-rating устанавливается для доступа к объектам этого класса через js#}
+{#                    Потом оттуда выковыривается идентификатор вопроса из data-answer-id#}
+                    <p class="answer-rating" data-answer-id="{{ answer.id }}" style="text-align: center; margin: 0 0 2px 0;">{{ answer.rating }}</p>
+
+{#                    {% if user.is_authenticated %}#}
+{#                        У кнопок установлены классы like_answer и dislike_answer для доступа к объектам этого класса через js#}
+                        <button data-answer-id="{{ answer.id }}" type="button" class="like_answer btn btn-xs btn-success" style="">
+                            <span class="glyphicon glyphicon-thumbs-up"></span>
+                        </button>
+                        <button data-answer-id="{{ answer.id }}" type="button" class="dislike_answer btn btn-xs btn-danger" style="float: right">
+                            <span class="glyphicon glyphicon-thumbs-down"></span>
+                        </button>
+{#                    {% endif %}#}
+                </div>
+            </div>
+            <div style="width: auto; overflow: hidden; padding: 0 10px;">
+                <p>{{ answer.text }}</p>
+
+                <div class="checkbox" style="padding: 10px 0;">
+                    <label>
+{#                        У чекбокса установлен класс answer-checkbox для доступа к объектам этого класса через js#}
+                        <input class="answer-checkbox" data-answer-id="{{ answer.id }}" type="checkbox" {% if answer.correct_answer %}checked{% endif %}> Correct!
+                    </label>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
+    <div class="sectionDivider" style="margin: 10px 0;"></div>
+
+    {% if user.is_authenticated %}
+        <form class="form-horizontal" action="" method="post">
+            {% csrf_token %}
+
+            {% for error in form.text.errors %}
+                <div class="alert alert-danger" role="alert">{{ error }}</div>
+            {% endfor %}
+
+            <div class="form-group">
+                <div class="container">
+{#                        <textarea rows="10" class="form-control" id="inputAnswer" placeholder="Enter your answer here"#}
+{#                                  style="resize: none; width: 100%"></textarea>#}
+                     {{ form.text|add_class:"form-control"|attr:"name:text"|attr:"rows:10"|attr:"style:resize: none; width: 100%"|attr:"id:inputAnswer"|attr:"placeholder:Enter your answer here"}}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="container">
+                    <button type="submit" class="btn btn-success">Answer</button>
+                </div>
+            </div>
+        </form>
+    {% endif %}
+
+{% endblock %}

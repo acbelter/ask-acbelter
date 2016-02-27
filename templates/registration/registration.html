@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% load static from staticfiles %}
+{% load widget_tweaks %}
+
+{% block content %}
+    <h2>Registration</h2>
+
+    <form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {% for error in form.login.errors %}
+            <div class="alert alert-danger" role="alert">{{ error }}</div>
+        {% endfor %}
+
+        <div class="form-group">
+            <label for="inputLogin" class="col-sm-2 control-label" style="text-align: left;">Login</label>
+
+            <div class="col-sm-10">
+{#                <input name="login" type="text" class="form-control" id="inputLogin" placeholder="dr_pepper">#}
+                {{ form.login|add_class:"form-control"|attr:"name:login"|attr:"type:text"|attr:"id:inputLogin"|attr:"placeholder:dr_pepper" }}
+            </div>
+        </div>
+
+        {% for error in form.email.errors %}
+            <div class="alert alert-danger" role="alert">{{ error }}</div>
+        {% endfor %}
+
+        <div class="form-group">
+            <label for="inputEmail" class="col-sm-2 control-label" style="text-align: left;">Email</label>
+
+            <div class="col-sm-10">
+{#                <input name="email" type="email" class="form-control" id="inputEmail" placeholder="drpapper@mail.ru">#}
+                  {{ form.email|add_class:"form-control"|attr:"name:email"|attr:"type:email"|attr:"id:inputEmail"|attr:"placeholder:drpapper@mail.ru" }}
+            </div>
+        </div>
+
+        {% for error in form.nick.errors %}
+            <div class="alert alert-danger" role="alert">{{ error }}</div>
+        {% endfor %}
+
+        <div class="form-group">
+            <label for="inputNick" class="col-sm-2 control-label" style="text-align: left;">Nick</label>
+
+            <div class="col-sm-10">
+{#                <input name="nick" type="text" class="form-control" id="inputNick" placeholder="Dr.Pepper">#}
+                  {{ form.nick|add_class:"form-control"|attr:"name:nick"|attr:"type:text"|attr:"id:inputNick"|attr:"placeholder:Dr.Pepper" }}
+            </div>
+        </div>
+
+        {% for error in form.password.errors %}
+            <div class="alert alert-danger" role="alert">{{ error }}</div>
+        {% endfor %}
+
+        <div class="form-group">
+            <label for="inputPassword" class="col-sm-2 control-label" style="text-align: left;">Password</label>
+
+            <div class="col-sm-10">
+{#                <input name="password" type="password" class="form-control" id="inputPassword" placeholder="12345678">#}
+                  {{ form.password|add_class:"form-control"|attr:"name:password"|attr:"type:password"|attr:"id:inputPassword"|attr:"placeholder:12345678" }}
+            </div>
+        </div>
+
+        {% for error in form.repeat_password.errors %}
+            <div class="alert alert-danger" role="alert">{{ error }}</div>
+        {% endfor %}
+
+        <div class="form-group">
+            <label for="inputRepeatPassword" class="col-sm-2 control-label" style="text-align: left;">Repeat password</label>
+
+            <div class="col-sm-10">
+{#                <input name="repeat_password" type="password" class="form-control" id="inputRepeatPassword" placeholder="12345678">#}
+                  {{ form.repeat_password|add_class:"form-control"|attr:"name:repeat_password"|attr:"type:password"|attr:"id:inputRepeatPassword"|attr:"placeholder:12345678" }}
+            </div>
+        </div>
+
+        {% for error in form.avatar.errors %}
+            <div class="alert alert-danger" role="alert">{{ error }}</div>
+        {% endfor %}
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <img id="avatarPreview" class="bigAvatar" style="border: 1px solid grey;" src="{% static 'default_avatar.png' %}" alt="avatar">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="inputUploadAvatar" class="col-sm-2 control-label" style="text-align: left;">Upload avatar</label>
+
+            <div class="col-sm-10">
+                <input id="avatarName" type="text" class="form-control" placeholder="avatar.jpg" readonly>
+
+                <div class="fileUpload btn btn-primary" style="margin-top: 5px;">
+                    <span>Choose</span>
+                    <input id="inputUploadAvatar" name="avatar" type="file" class="upload"/>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10" style="margin-top: 20px;">
+                <button type="submit" class="btn btn-success">Register!</button>
+            </div>
+        </div>
+    </form>
+{% endblock %}

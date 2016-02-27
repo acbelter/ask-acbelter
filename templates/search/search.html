@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% if query %}
+        <h3>Search results for: "{{ query }}"</h3>
+
+        {% for result in page.object_list %}
+            {% ifequal result.model_name 'question' %}
+                <h5><a href="{% url 'answers' result.object.pk %}">{{ result.object.title }}</a></h5>
+                <p>{{ result.object.text }}</p>
+            {% else %}
+                <h5><a href="{% url 'answers' result.object.question.pk %}">{{ result.object.question.title }}</a></h5>
+                <p>{{ result.object.text }}</p>
+            {% endifequal %}
+            <div class="sectionDivider" style="margin: 10px 0;"></div>
+        {% empty %}
+            <p>No results found.</p>
+        {% endfor %}
+
+        {% if page %}
+            <div class="pagination">
+                <span class="step-links">
+                    {% if page.has_previous %}
+                        <a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">previous</a>
+                    {% endif %}
+
+                    <span class="current">
+                        Page {{ page.number }} of {{ page.paginator.num_pages }}
+                    </span>
+
+                    {% if page.has_next %}
+                        <a href="?q={{ query }}&amp;page={{ page.next_page_number }}">next</a>
+                    {% endif %}
+                </span>
+            </div>
+        {% endif %}
+
+    {% else %}
+        {# Show some example queries to run, maybe query syntax, something else? #}
+    {% endif %}
+{% endblock %}
+
+{% block statistics %}
+{% endblock %}
